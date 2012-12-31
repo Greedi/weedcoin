@@ -1902,11 +1902,16 @@ bool LoadBlockIndex(bool fAllowNew)
             return false;
 
         // Genesis Block:
-	//  CBlock(hash=3d5177a770b3c3cd6174, PoW=00000ba53e7ab307d268, ver=1, hashPrevBlock=00000000000000000000, hashMerkleRoot=d14936e84c, nTime=1317972665, nBits=1e0ffff0, nNonce=2085570900, vtx=1)
-	//  CTransaction(hash=d14936e84c, ver=1, vin.size=1, vout.size=1, nLockTime=0)
-	//    CTxIn(COutPoint(0000000000, -1), coinbase 04ffff001d01042f4e592054696d65732031332f6a756c2f32303132204772656564692c2057656564436f696e20646576656c6f706572)
-	//    CTxOut(nValue=65.00000000, scriptPubKey=040184710fa689ad5023690c80f3a4)
-	//  vMerkleTree: d14936e84c 
+/*
+	block.nTime = 1356988772 
+	block.nNonce = 387131129 
+	block.GetHash = 6021c4c42c1e8f80583a21128a59c2b5aeb70c716515c4b34e832ba5183f6731
+	CBlock(hash=6021c4c42c1e8f80583a, PoW=00000cbdeb6086735914, ver=1, hashPrevBlock=00000000000000000000, hashMerkleRoot=58f4ad8f4b, nTime=1356988772, nBits=1e0ffff0, nNonce=387131129, vtx=1)
+	  CTransaction(hash=58f4ad8f4b, ver=1, vin.size=1, vout.size=1, nLockTime=0)
+		CTxIn(COutPoint(0000000000, -1), coinbase 04ffff001d01042f4e592054696d65732031332f6a756c2f32303132204772656564692c2057656564436f696e20646576656c6f706572)
+		CTxOut(nValue=65.00000000, scriptPubKey=04ffff001d01042f4e592054696d65)
+	  vMerkleTree: 58f4ad8f4b
+*/
 
 
         // Genesis block
@@ -1928,16 +1933,16 @@ bool LoadBlockIndex(bool fAllowNew)
 
         if (fTestNet)
         {
-            block.nTime    = 1317798646;
+            block.nTime    = 1356988772;
             block.nBits    = 0x1e0ffff0;
-            block.nNonce   = 385270584;
+             block.nNonce   = 387131129;
         }
 
         //// debug print
         printf("%s\n", block.GetHash().ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x6021c4c42c1e8f80583a21128a59c2b5aeb70c716515c4b34e832ba5183f6731"));
+        assert(block.hashMerkleRoot == uint256("0x58f4ad8f4bc3629287f0267312fc17190ff2a0ec2408f9db53a829f022ce97d4"));
         
         // If genesis block hash does not match, then generate new genesis hash.
         if (false && block.GetHash() != hashGenesisBlock)
