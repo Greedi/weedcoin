@@ -1,12 +1,12 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
+// Copyright (c) 2011-2012 weedcoin Developers
 // Distributed under the MIT/X11 software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 #include "protocol.h"
 #include "util.h"
 #include "netbase.h"
-#include "main.h"
 
 #ifndef WIN32
 # include <arpa/inet.h>
@@ -108,7 +108,7 @@ CInv::CInv(int typeIn, const uint256& hashIn)
 
 CInv::CInv(const std::string& strType, const uint256& hashIn)
 {
-    unsigned int i;
+    int i;
     for (i = 1; i < ARRAYLEN(ppszTypeName); i++)
     {
         if (strType == ppszTypeName[i])
@@ -129,7 +129,7 @@ bool operator<(const CInv& a, const CInv& b)
 
 bool CInv::IsKnownType() const
 {
-    return (type >= 1 && type < (int)ARRAYLEN(ppszTypeName));
+    return (type >= 1 && type < ARRAYLEN(ppszTypeName));
 }
 
 const char* CInv::GetCommand() const
@@ -141,11 +141,6 @@ const char* CInv::GetCommand() const
 
 std::string CInv::ToString() const
 {
-    if (type == MSG_BLOCK)
-        return strprintf("%s %s", GetCommand(), BlockHashStr(hash).c_str());
-    if (type == MSG_TX)
-        return strprintf("%s %s", GetCommand(), hash.ToString().substr(0,10).c_str());
-
     return strprintf("%s %s", GetCommand(), hash.ToString().substr(0,20).c_str());
 }
 

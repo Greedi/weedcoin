@@ -3,20 +3,15 @@
 
 #include <QObject>
 
-#include "allocators.h" /* for SecureString */
+#include "util.h"
 
 class OptionsModel;
 class AddressTableModel;
 class TransactionTableModel;
 class CWallet;
 
-QT_BEGIN_NAMESPACE
-class QTimer;
-QT_END_NAMESPACE
-
-class SendCoinsRecipient
+struct SendCoinsRecipient
 {
-public:
     QString address;
     QString label;
     qint64 amount;
@@ -28,7 +23,6 @@ class WalletModel : public QObject
     Q_OBJECT
 public:
     explicit WalletModel(CWallet *wallet, OptionsModel *optionsModel, QObject *parent = 0);
-    ~WalletModel();
 
     enum StatusCode // Returned by sendCoins
     {
@@ -40,7 +34,8 @@ public:
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
-        Aborted
+        Aborted,
+        MiscError
     };
 
     enum EncryptionStatus
@@ -56,7 +51,6 @@ public:
 
     qint64 getBalance() const;
     qint64 getUnconfirmedBalance() const;
-    qint64 getImmatureBalance() const;
     int getNumTransactions() const;
     EncryptionStatus getEncryptionStatus() const;
 
@@ -121,20 +115,12 @@ private:
     // Cache some values to be able to detect changes
     qint64 cachedBalance;
     qint64 cachedUnconfirmedBalance;
-    qint64 cachedImmatureBalance;
     qint64 cachedNumTransactions;
     EncryptionStatus cachedEncryptionStatus;
-    int cachedNumBlocks;
-
-    QTimer *pollTimer;
-
-    void subscribeToCoreSignals();
-    void unsubscribeFromCoreSignals();
-    void checkBalanceChanged();
 
 signals:
     // Signal that balance in wallet changed
-    void balanceChanged(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
+    void balanceChanged(qint64 balance, qint64 unconfirmedBalance);
 
     // Number of transactions in wallet changed
     void numTransactionsChanged(int count);
@@ -147,18 +133,13 @@ signals:
     // this means that the unlocking failed or was cancelled.
     void requireUnlock();
 
-    // Asynchronous message notification
-    void message(const QString &title, const QString &message, unsigned int style);
+    // Asynchronous error notification
+    void error(const QString &title, const QString &message);
 
 public slots:
-    /* Wallet status might have changed */
-    void updateStatus();
-    /* New transaction, or transaction changed status */
-    void updateTransaction(const QString &hash, int status);
-    /* New, updated or removed address book entry */
-    void updateAddressBook(const QString &address, const QString &label, bool isMine, int status);
-    /* Current, immature or unconfirmed balance might have changed - emit 'balanceChanged' if so */
-    void pollBalanceChanged();
+
+private slots:
+    void update();
 };
 
 

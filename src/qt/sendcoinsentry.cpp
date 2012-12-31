@@ -17,13 +17,13 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#ifdef Q_OS_MAC
+#ifdef Q_WS_MAC
     ui->payToLayout->setSpacing(4);
 #endif
+
 #if QT_VERSION >= 0x040700
-    /* Do not move this to the XML file, Qt before 4.7 will choke on it */
+    ui->payTo->setPlaceholderText(tr("Enter a weedcoin address (e.g. Ler4HNAEfwYhBmGXcFP2Po1NpRUEiK8km2)"));
     ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
-    ui->payTo->setPlaceholderText(tr("Enter a Weedcoin address (e.g. WNS17iag9jJgTHD1VXjvLCEnZuQ3rJDE9L)"));
 #endif
     setFocusPolicy(Qt::TabFocus);
     setFocusProxy(ui->payTo);
@@ -59,19 +59,14 @@ void SendCoinsEntry::on_payTo_textChanged(const QString &address)
 {
     if(!model)
         return;
-    // Fill in label from address book, if address has an associated label
-    QString associatedLabel = model->getAddressTableModel()->labelForAddress(address);
-    if(!associatedLabel.isEmpty())
-        ui->addAsLabel->setText(associatedLabel);
+    // Fill in label from address book, if no label is filled in yet
+    if(ui->addAsLabel->text().isEmpty())
+        ui->addAsLabel->setText(model->getAddressTableModel()->labelForAddress(address));
 }
 
 void SendCoinsEntry::setModel(WalletModel *model)
 {
     this->model = model;
-
-    if(model && model->getOptionsModel())
-        connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
-
     clear();
 }
 
@@ -86,8 +81,10 @@ void SendCoinsEntry::clear()
     ui->addAsLabel->clear();
     ui->payAmount->clear();
     ui->payTo->setFocus();
-    // update the display unit, to not use the default ("BTC")
-    updateDisplayUnit();
+    if(model && model->getOptionsModel())
+    {
+        ui->payAmount->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
+    }
 }
 
 void SendCoinsEntry::on_deleteButton_clicked()
@@ -162,11 +159,3 @@ void SendCoinsEntry::setFocus()
     ui->payTo->setFocus();
 }
 
-void SendCoinsEntry::updateDisplayUnit()
-{
-    if(model && model->getOptionsModel())
-    {
-        // Update payAmount with the current unit
-        ui->payAmount->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
-    }
-}

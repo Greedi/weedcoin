@@ -1,13 +1,13 @@
 // Copyright (c) 2012 The Bitcoin developers
+// Copyright (c) 2011-2012 weedcoin Developers
 // Distributed under the MIT/X11 software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file license.txt or http://www.opensource.org/licenses/mit-license.php.
 #ifndef BITCOIN_MRUSET_H
 #define BITCOIN_MRUSET_H
 
 #include <set>
 #include <deque>
 
-/** STL-like set container that only keeps the most recent N elements. */
 template <typename T> class mruset
 {
 public:
@@ -51,7 +51,7 @@ public:
     size_type max_size(size_type s)
     {
         if (s)
-            while (queue.size() > s)
+            while (queue.size() >= s)
             {
                 set.erase(queue.front());
                 queue.pop_front();

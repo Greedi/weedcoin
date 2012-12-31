@@ -1,59 +1,45 @@
 # Copyright (c) 2009-2010 Satoshi Nakamoto
 # Distributed under the MIT/X11 software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 USE_UPNP:=0
-USE_IPV6:=1
 
 INCLUDEPATHS= \
- -I"C:\boost-1.50.0-mgw" \
+ -I"C:\boost-1.47.0-mgw" \
  -I"C:\db-4.8.30.NC-mgw\build_unix" \
- -I"C:\openssl-1.0.1c-mgw\include"
+ -I"C:\openssl-1.0.0d-mgw\include"
 
 LIBPATHS= \
- -L"C:\boost-1.50.0-mgw\stage\lib" \
+ -L"C:\boost-1.47.0-mgw\stage\lib" \
  -L"C:\db-4.8.30.NC-mgw\build_unix" \
- -L"C:\openssl-1.0.1c-mgw"
+ -L"C:\openssl-1.0.0d-mgw"
 
 LIBS= \
- -l boost_system-mgw45-mt-s-1_50 \
- -l boost_filesystem-mgw45-mt-s-1_50 \
- -l boost_program_options-mgw45-mt-s-1_50 \
- -l boost_thread-mgw45-mt-s-1_50 \
- -l boost_chrono-mgw45-mt-s-1_50 \
+ -l boost_system-mgw45-mt-s-1_47 \
+ -l boost_filesystem-mgw45-mt-s-1_47 \
+ -l boost_program_options-mgw45-mt-s-1_47 \
+ -l boost_thread-mgw45-mt-s-1_47 \
  -l db_cxx \
  -l ssl \
  -l crypto
 
-DEFS=-DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
+DEFS=-DWIN32 -D_WINDOWS -DNOPCH -DUSE_SSL -DBOOST_THREAD_USE_LIB
 DEBUGFLAGS=-g
-CFLAGS=-mthreads -O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
-LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat
+CFLAGS=-mthreads -O2 -w -Wno-invalid-offsetof -Wformat $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
 
-TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
-
-ifndef USE_UPNP
-	override USE_UPNP = -
-endif
-ifneq (${USE_UPNP}, -)
+ifdef USE_UPNP
  INCLUDEPATHS += -I"C:\miniupnpc-1.6-mgw"
  LIBPATHS += -L"C:\miniupnpc-1.6-mgw"
  LIBS += -l miniupnpc -l iphlpapi
  DEFS += -DSTATICLIB -DUSE_UPNP=$(USE_UPNP)
 endif
 
-ifneq (${USE_IPV6}, -)
-	DEFS += -DUSE_IPV6=$(USE_IPV6)
-endif
-
-LIBS += -l kernel32 -l user32 -l gdi32 -l comdlg32 -l winspool -l winmm -l shell32 -l comctl32 -l ole32 -l oleaut32 -l uuid -l rpcrt4 -l advapi32 -l ws2_32 -l mswsock -l shlwapi
+LIBS += -l kernel32 -l user32 -l gdi32 -l comdlg32 -l winspool -l winmm -l shell32 -l comctl32 -l ole32 -l oleaut32 -l uuid -l rpcrt4 -l advapi32 -l ws2_32 -l shlwapi
 
 # TODO: make the mingw builds smarter about dependencies, like the linux/osx builds are
 HEADERS = $(wildcard *.h)
 
 OBJS= \
-    obj/alert.o \
-    obj/version.o \
     obj/checkpoints.o \
     obj/netbase.o \
     obj/addrman.o \
@@ -68,54 +54,33 @@ OBJS= \
     obj/protocol.o \
     obj/bitcoinrpc.o \
     obj/rpcdump.o \
-    obj/rpcnet.o \
-    obj/rpcmining.o \
-    obj/rpcwallet.o \
-    obj/rpcblockchain.o \
-    obj/rpcrawtransaction.o \
     obj/script.o \
-    obj/sync.o \
+    obj/scrypt.o \
     obj/util.o \
-    obj/wallet.o \
-    obj/walletdb.o \
-    obj/noui.o \
-    obj/leveldb.o \
-    obj/txdb.o
+    obj/wallet.o
 
 
-all: bitcoind.exe
+all: weedcoind.exe
 
-test check: test_bitcoin.exe FORCE
-	test_bitcoin.exe
-
-#
-# LevelDB support
-#
-LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
-DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
-DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
-# TODO: If this fails, try adding a ranlib libleveldb.a && ranlib libmemenv.a
-leveldb/libleveldb.a:
-	cd leveldb && $(MAKE) libleveldb.a libmemenv.a && cd ..
-obj/leveldb.o: leveldb/libleveldb.a
+obj/nogui/scrypt.o: scrypt.c
+	gcc -c -o $@ $^
 
 obj/%.o: %.cpp $(HEADERS)
 	g++ -c $(CFLAGS) -o $@ $<
 
-bitcoind.exe: $(OBJS:obj/%=obj/%)
-	g++ $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
+weedcoind.exe: $(OBJS:obj/%=obj/%)
+	g++ $(CFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
-TESTOBJS := $(patsubst test/%.cpp,obj-test/%.o,$(wildcard test/*.cpp))
+obj/test/test_bitcoin.o: $(wildcard test/*.cpp) $(HEADERS)
+	g++ -c $(CFLAGS) -o $@ test/test_bitcoin.cpp
 
-obj-test/%.o: test/%.cpp $(HEADERS)
-	g++ -c $(TESTDEFS) $(CFLAGS) -o $@ $<
-
-test_bitcoin.exe: $(TESTOBJS) $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
-	g++ $(CFLAGS) $(LDFLAGS) -o $@ $(LIBPATHS) $^ -lboost_unit_test_framework $(LIBS)
+test_bitcoin.exe: obj/test/test_bitcoin.o $(filter-out obj/init.o,$(OBJS:obj/%=obj/%))
+	g++ $(CFLAGS) -o $@ $(LIBPATHS) $^ $(LIBS)
 
 clean:
-	-del /Q bitcoind test_bitcoin
+	-del /Q weedcoind test_bitcoin
 	-del /Q obj\*
-	-del /Q obj-test\*
-
-FORCE:
+	-del /Q obj\nogui\*
+	-del /Q obj\test\*
+	-del /Q test\*.o
+	-del /Q headers.h.gch

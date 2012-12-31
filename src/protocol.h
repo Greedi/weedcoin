@@ -1,7 +1,8 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
+// Copyright (c) 2011-2012 weedcoin Developers
 // Distributed under the MIT/X11 software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef __cplusplus
 # error This header can only be compiled as C++.
@@ -12,24 +13,25 @@
 
 #include "serialize.h"
 #include "netbase.h"
+#include "util.h"
 #include <string>
 #include "uint256.h"
 
 extern bool fTestNet;
 static inline unsigned short GetDefaultPort(const bool testnet = fTestNet)
 {
-    return testnet ? 18333 : 8333;
+    return testnet ? 19444 : 9444;
 }
 
+//
+// Message header
+//  (4) message start
+//  (12) command
+//  (4) size
+//  (4) checksum
 
 extern unsigned char pchMessageStart[4];
 
-/** Message header.
- * (4) message start.
- * (12) command.
- * (4) size.
- * (4) checksum.
- */
 class CMessageHeader
 {
     public:
@@ -49,28 +51,18 @@ class CMessageHeader
 
     // TODO: make private (improves encapsulation)
     public:
-        enum {
-            MESSAGE_START_SIZE=sizeof(::pchMessageStart),
-            COMMAND_SIZE=12,
-            MESSAGE_SIZE_SIZE=sizeof(int),
-            CHECKSUM_SIZE=sizeof(int),
-
-            MESSAGE_SIZE_OFFSET=MESSAGE_START_SIZE+COMMAND_SIZE,
-            CHECKSUM_OFFSET=MESSAGE_SIZE_OFFSET+MESSAGE_SIZE_SIZE
-        };
-        char pchMessageStart[MESSAGE_START_SIZE];
+        enum { COMMAND_SIZE=12 };
+        char pchMessageStart[sizeof(::pchMessageStart)];
         char pchCommand[COMMAND_SIZE];
         unsigned int nMessageSize;
         unsigned int nChecksum;
 };
 
-/** nServices flags */
 enum
 {
     NODE_NETWORK = (1 << 0),
 };
 
-/** A CService with information about it as peer */
 class CAddress : public CService
 {
     public:
@@ -86,10 +78,9 @@ class CAddress : public CService
              if (fRead)
                  pthis->Init();
              if (nType & SER_DISK)
-                 READWRITE(nVersion);
-             if ((nType & SER_DISK) ||
-                 (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
-                 READWRITE(nTime);
+             READWRITE(nVersion);
+             if ((nType & SER_DISK) || (nVersion >= 31402 && !(nType & SER_GETHASH)))
+             READWRITE(nTime);
              READWRITE(nServices);
              READWRITE(*pip);
             )
@@ -107,7 +98,6 @@ class CAddress : public CService
         int64 nLastTry;
 };
 
-/** inv message data */
 class CInv
 {
     public:
@@ -132,12 +122,6 @@ class CInv
     public:
         int type;
         uint256 hash;
-};
-
-enum
-{
-    MSG_TX = 1,
-    MSG_BLOCK,
 };
 
 #endif // __INCLUDED_PROTOCOL_H__

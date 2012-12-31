@@ -7,35 +7,31 @@
 namespace Ui {
     class QRCodeDialog;
 }
-class OptionsModel;
 
 class QRCodeDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit QRCodeDialog(const QString &addr, const QString &label, bool enableReq, QWidget *parent = 0);
+    explicit QRCodeDialog(const QString &title, const QString &address, const QString &label, bool allowReq, QWidget *parent = 0);
     ~QRCodeDialog();
 
-    void setModel(OptionsModel *model);
-
 private slots:
-    void on_lnReqAmount_textChanged();
-    void on_lnLabel_textChanged();
-    void on_lnMessage_textChanged();
+    void on_lnReqAmount_textChanged(const QString &arg1);
+    void on_lnLabel_textChanged(const QString &arg1);
+    void on_lnMessage_textChanged(const QString &arg1);
     void on_btnSaveAs_clicked();
-    void on_chkReqPayment_toggled(bool fChecked);
 
-    void updateDisplayUnit();
+    void on_chkReq_toggled(bool checked);
 
 private:
     Ui::QRCodeDialog *ui;
-    OptionsModel *model;
-    QString address;
     QImage myImage;
 
-    void genCode();
     QString getURI();
+    QString address;
+
+    void genCode();
 };
 
 #endif // QRCODEDIALOG_H

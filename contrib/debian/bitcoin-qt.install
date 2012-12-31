@@ -1,4 +1,5 @@
-bitcoin-qt usr/bin
+debian/bin/bitcoin-qt usr/bin
+bitcoin-qt usr/lib/bitcoin
 share/pixmaps/bitcoin32.xpm usr/share/pixmaps
 share/pixmaps/bitcoin80.xpm usr/share/pixmaps
 debian/bitcoin-qt.desktop usr/share/applications

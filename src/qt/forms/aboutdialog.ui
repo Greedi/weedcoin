@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>About Bitcoin</string>
+   <string>About Litecoin</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
@@ -21,6 +21,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
      </property>
      <property name="pixmap">
       <pixmap resource="../bitcoin.qrc">:/images/about</pixmap>
@@ -46,27 +49,18 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QLabel" name="label">
-         <property name="cursor">
-          <cursorShape>IBeamCursor</cursorShape>
-         </property>
          <property name="text">
-          <string>&lt;b&gt;Bitcoin&lt;/b&gt; version</string>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+          <string>&lt;b&gt;Litecoin&lt;/b&gt; version</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="versionLabel">
-         <property name="cursor">
-          <cursorShape>IBeamCursor</cursorShape>
-         </property>
          <property name="text">
           <string notr="true">0.3.666-beta</string>
          </property>
-         <property name="textInteractionFlags">
-          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
          </property>
         </widget>
        </item>
@@ -86,36 +80,19 @@
       </layout>
      </item>
      <item>
-      <widget class="QLabel" name="copyrightLabel">
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
-       <property name="text">
-        <string>Copyright © 2009-2012 The Bitcoin developers</string>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="label_2">
-       <property name="cursor">
-        <cursorShape>IBeamCursor</cursorShape>
-       </property>
        <property name="text">
-        <string>
+        <string>Copyright © 2009-2012 Bitcoin Developers
+Copyright © 2011-2012 Litecoin Developers
+
 This is experimental software.
 
-Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php.
+Distributed under the MIT/X11 software license, see the accompanying file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
 This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/) and cryptographic software written by Eric Young (eay@cryptsoft.com) and UPnP software written by Thomas Bernard.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
-       </property>
-       <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
        </property>
       </widget>
      </item>

@@ -20,7 +20,7 @@ public:
 
     enum ColumnIndex {
         Label = 0,   /**< User specified label */
-        Address = W  /**< Bitcoin address */
+        Address = 1  /**< Bitcoin address */
     };
 
     enum RoleIndex {
@@ -56,6 +56,10 @@ public:
      */
     QString addRow(const QString &type, const QString &label, const QString &address);
 
+    /* Update address list from core. Invalidates any indices.
+     */
+    void updateList();
+
     /* Look up label for address in address book, if not found return empty string.
      */
     QString labelForAddress(const QString &address) const;
@@ -74,18 +78,11 @@ private:
     QStringList columns;
     EditStatus editStatus;
 
-    /** Notify listeners that data changed. */
-    void emitDataChanged(int index);
-
 signals:
     void defaultAddressChanged(const QString &address);
 
 public slots:
-    /* Update address list from core.
-     */
-    void updateEntry(const QString &address, const QString &label, bool isMine, int status);
-
-    friend class AddressTablePriv;
+    void update();
 };
 
 #endif // ADDRESSTABLEMODEL_H
