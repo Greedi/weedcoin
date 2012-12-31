@@ -36,7 +36,7 @@ unsigned int nTransactionsUpdated = 0;
 map<COutPoint, CInPoint> mapNextTx;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("");
+uint256 hashGenesisBlock("f5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // weedcoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1937,7 +1937,7 @@ bool LoadBlockIndex(bool fAllowNew)
         printf("%s\n", block.GetHash().ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-       // assert(block.hashMerkleRoot == uint256("0x52f709f2e4b4344d7fc7b64af56833b4587f60f2ad7794cf9269f41c797a31b9"));
+        assert(block.hashMerkleRoot == uint256("0x52f709f2e4b4344d7fc7b64af56833b4587f60f2ad7794cf9269f41c797a31b9"));
 
         // If genesis block hash does not match, then generate new genesis hash.
         if (false && block.GetHash() != hashGenesisBlock)
@@ -1971,7 +1971,7 @@ bool LoadBlockIndex(bool fAllowNew)
         }
 
         block.print();
-        //assert(block.GetHash() == hashGenesisBlock);
+        assert(block.GetHash() == hashGenesisBlock);
 
         // Start new block file
         unsigned int nFile;
