@@ -36,7 +36,7 @@ unsigned int nTransactionsUpdated = 0;
 map<COutPoint, CInPoint> mapNextTx;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("f5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f");
+uint256 hashGenesisBlock("0x6021c4c42c1e8f80583a21128a59c2b5aeb70c716515c4b34e832ba5183f6731");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // weedcoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
@@ -1876,7 +1876,7 @@ bool LoadBlockIndex(bool fAllowNew)
 {
     if (fTestNet)
     {
-        hashGenesisBlock = uint256("0xf5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f");
+        hashGenesisBlock = uint256("0x6021c4c42c1e8f80583a21128a59c2b5aeb70c716515c4b34e832ba5183f6731");
         // bnProofOfWorkLimit = CBigNum(~uint256(0) >> 28); // weedcoin: starting difficulty is the same for testnet
         // weedcoin: increase each by adding 2 to Weedcoin's value.
         pchMessageStart[0] = 0xfd;
@@ -1922,9 +1922,9 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1317972665;
+        block.nTime    = 1356988772;
         block.nBits    = 0x1e0ffff0;
-        block.nNonce   = 2086797510;
+        block.nNonce   = 387131129;
 
         if (fTestNet)
         {
@@ -1937,8 +1937,8 @@ bool LoadBlockIndex(bool fAllowNew)
         printf("%s\n", block.GetHash().ToString().c_str());
         printf("%s\n", hashGenesisBlock.ToString().c_str());
         printf("%s\n", block.hashMerkleRoot.ToString().c_str());
-        assert(block.hashMerkleRoot == uint256("0x52f709f2e4b4344d7fc7b64af56833b4587f60f2ad7794cf9269f41c797a31b9"));
-
+        assert(block.hashMerkleRoot == uint256("0x6021c4c42c1e8f80583a21128a59c2b5aeb70c716515c4b34e832ba5183f6731"));
+        
         // If genesis block hash does not match, then generate new genesis hash.
         if (false && block.GetHash() != hashGenesisBlock)
         {
