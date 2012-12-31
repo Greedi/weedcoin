@@ -36,7 +36,7 @@ unsigned int nTransactionsUpdated = 0;
 map<COutPoint, CInPoint> mapNextTx;
 
 map<uint256, CBlockIndex*> mapBlockIndex;
-uint256 hashGenesisBlock("0x0539a3435534c320c834c1ad06cf9305a93857b58b4607d5d0604b25169f69f9");
+uint256 hashGenesisBlock("");
 static CBigNum bnProofOfWorkLimit(~uint256(0) >> 20); // weedcoin: starting difficulty is 1 / 2^12
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;

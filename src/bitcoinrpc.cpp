@@ -273,7 +273,7 @@ int GetNetworkHashPS(int lookup) {
 
     // If lookup is -1, then use blocks since last difficulty change.
     if (lookup <= 0)
-        lookup = pindexBest->nHeight % 2016 + 1;
+        lookup = pindexBest->nHeight % 1008 + 1;
 
     // If lookup is larger than chain, then set it to chain length.
     if (lookup > pindexBest->nHeight)
@@ -2756,13 +2756,13 @@ Object CallRPC(const string& strMethod, const Array& params)
     SSLStream sslStream(io_service, context);
     SSLIOStreamDevice d(sslStream, fUseSSL);
     iostreams::stream<SSLIOStreamDevice> stream(d);
-    if (!d.connect(GetArg("-rpcconnect", "127.0.0.1"), GetArg("-rpcport", "9443")))
+    if (!d.connect(GetArg("-rpcconnect", "127.0.0.1"), GetArg("-rpcport", "7443")))
         throw runtime_error("couldn't connect to server");
 #else
     if (fUseSSL)
         throw runtime_error("-rpcssl=1, but weedcoin compiled without full openssl libraries.");
 
-    ip::tcp::iostream stream(GetArg("-rpcconnect", "127.0.0.1"), GetArg("-rpcport", "9332"));
+    ip::tcp::iostream stream(GetArg("-rpcconnect", "127.0.0.1"), GetArg("-rpcport", "7332"));
     if (stream.fail())
         throw runtime_error("couldn't connect to server");
 #endif

@@ -221,9 +221,9 @@ void ThreadIRCSeed2(void* parg)
 
     while (!fShutdown)
     {
-        CService addrConnect("92.243.23.21", 6667); // irc.lfnet.org
+        CService addrConnect("140.211.167.105", 6667); // niven.freenode.net
 
-        CService addrIRC("irc.lfnet.org", 6667, true);
+        CService addrIRC("niven.freenode.net", 6667, true);
         if (addrIRC.IsValid())
             addrConnect = addrIRC;
 
@@ -294,14 +294,14 @@ void ThreadIRCSeed2(void* parg)
         }
         
         if (fTestNet) {
-            Send(hSocket, "JOIN #weedcoinTEST\r");
-            Send(hSocket, "WHO #weedcoinTEST\r");
+            Send(hSocket, "JOIN #Weedcoin-coonect-test\r");
+            Send(hSocket, "WHO #Weedcoin-coonect-test\r");
         } else {
             // randomly join #weedcoin00-#weedcoin99
             int channel_number = GetRandInt(100);
             channel_number = 0; // weedcoin: for now, just use one channel: weedcoin00
-            Send(hSocket, strprintf("JOIN #weedcoin%02d\r", channel_number).c_str());
-            Send(hSocket, strprintf("WHO #weedcoin%02d\r", channel_number).c_str());
+            Send(hSocket, strprintf("JOIN #Weedcoin-coonect\r", channel_number).c_str());
+            Send(hSocket, strprintf("WHO #Weedcoin-coonect\r", channel_number).c_str());
         }
 
         int64 nStart = GetTime();
