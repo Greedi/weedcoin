@@ -1,0 +1,9 @@
+Building Weedcoin
+
+See doc/readme-qt.rst for instructions on building Weedcoin-Qt,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of Weedcoin.
+
+See doc/build-*.txt for instructions on building weedcoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of Weedcoin.
