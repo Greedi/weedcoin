@@ -2577,7 +2577,7 @@ void ThreadRPCServer2(void* parg)
     asio::ip::address bindAddress = mapArgs.count("-rpcallowip") ? asio::ip::address_v4::any() : asio::ip::address_v4::loopback();
 
     asio::io_service io_service;
-    ip::tcp::endpoint endpoint(bindAddress, GetArg("-rpcport", 9443));
+    ip::tcp::endpoint endpoint(bindAddress, GetArg("-rpcport", 7332));
     ip::tcp::acceptor acceptor(io_service, endpoint);
 
     acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
