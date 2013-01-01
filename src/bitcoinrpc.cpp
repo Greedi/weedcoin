@@ -1,6 +1,6 @@
 // Copyright (c) 2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
-// Copyright (c) 2011-2012 weedcoin Developers
+// Copyright (c) 2011-2013 The Weedcoin Developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
@@ -260,7 +260,7 @@ Value getconnectioncount(const Array& params, bool fHelp)
     if (fHelp || params.size() != 0)
         throw runtime_error(
             "getconnectioncount\n"
-            "Returns the number of connections to other nodes.");
+            "Returns the number of connections to other Weedcoin nodes.");
 
     return (int)vNodes.size();
 }
@@ -485,7 +485,7 @@ Value getaccountaddress(const Array& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "getaccountaddress <account>\n"
-            "Returns the current weedcoin address for receiving payments to this account.");
+            "Returns the current Weedcoin address for receiving payments to this account.");
 
     // Parse the account first so we don't generate a key if there's an error
     string strAccount = AccountFromValue(params[0]);
@@ -508,7 +508,7 @@ Value setaccount(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(-5, "Invalid weedcoin address");
+        throw JSONRPCError(-5, "Invalid Weedcoin address");
 
 
     string strAccount;
@@ -538,7 +538,7 @@ Value getaccount(const Array& params, bool fHelp)
 
     CBitcoinAddress address(params[0].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(-5, "Invalid weedcoin address");
+        throw JSONRPCError(-5, "Invalid Weedcoin address");
 
     string strAccount;
     map<CBitcoinAddress, string>::iterator mi = pwalletMain->mapAddressBook.find(address);
@@ -652,7 +652,7 @@ Value signmessage(const Array& params, bool fHelp)
 
     CBitcoinAddress addr(strAddress);
     if (!addr.IsValid())
-        throw JSONRPCError(-3, "Invalid address");
+        throw JSONRPCError(-3, "Invalid Weedcoin address");
 
     CKey key;
     if (!pwalletMain->GetKey(addr, key))
@@ -682,7 +682,7 @@ Value verifymessage(const Array& params, bool fHelp)
 
     CBitcoinAddress addr(strAddress);
     if (!addr.IsValid())
-        throw JSONRPCError(-3, "Invalid address");
+        throw JSONRPCError(-3, "Invalid Weedcoin address");
 
     bool fInvalid = false;
     vector<unsigned char> vchSig = DecodeBase64(strSign.c_str(), &fInvalid);
@@ -713,7 +713,7 @@ Value getreceivedbyaddress(const Array& params, bool fHelp)
     CBitcoinAddress address = CBitcoinAddress(params[0].get_str());
     CScript scriptPubKey;
     if (!address.IsValid())
-        throw JSONRPCError(-5, "Invalid weedcoin address");
+        throw JSONRPCError(-5, "Invalid Weedcoin address");
     scriptPubKey.SetBitcoinAddress(address);
     if (!IsMine(*pwalletMain,scriptPubKey))
         return (double)0.0;
@@ -935,7 +935,7 @@ Value sendfrom(const Array& params, bool fHelp)
     string strAccount = AccountFromValue(params[0]);
     CBitcoinAddress address(params[1].get_str());
     if (!address.IsValid())
-        throw JSONRPCError(-5, "Invalid weedcoin address");
+        throw JSONRPCError(-5, "Invalid Weedcoin address");
     int64 nAmount = AmountFromValue(params[2]);
     int nMinDepth = 1;
     if (params.size() > 3)
@@ -996,7 +996,7 @@ Value sendmany(const Array& params, bool fHelp)
     {
         CBitcoinAddress address(s.name_);
         if (!address.IsValid())
-            throw JSONRPCError(-5, string("Invalid weedcoin address:")+s.name_);
+            throw JSONRPCError(-5, string("Invalid Weedcoin address:")+s.name_);
 
         if (setAddress.count(address))
             throw JSONRPCError(-8, string("Invalid parameter, duplicated address: ")+s.name_);
@@ -1064,7 +1064,7 @@ Value addmultisigaddress(const Array& params, bool fHelp)
     {
         const std::string& ks = keys[i].get_str();
 
-        // Case 1: bitcoin address and we have full public key:
+        // Case 1: weedcoin address and we have full public key:
         CBitcoinAddress address(ks);
         if (address.IsValid())
         {
@@ -1951,10 +1951,10 @@ Value getwork(const Array& params, bool fHelp)
             "If [data] is specified, tries to solve the block and returns true if it was successful.");
 
     if (vNodes.empty())
-        throw JSONRPCError(-9, "weedcoin is not connected!");
+        throw JSONRPCError(-9, "Weedcoin is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(-10, "weedcoin is downloading blocks...");
+        throw JSONRPCError(-10, "Weedcoin is downloading blocks...");
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
     static mapNewBlock_t mapNewBlock;
@@ -2063,10 +2063,10 @@ Value getmemorypool(const Array& params, bool fHelp)
     if (params.size() == 0)
     {
         if (vNodes.empty())
-            throw JSONRPCError(-9, "weedcoin is not connected!");
+            throw JSONRPCError(-9, "Wweedcoin is not connected!");
 
         if (IsInitialBlockDownload())
-            throw JSONRPCError(-10, "weedcoin is downloading blocks...");
+            throw JSONRPCError(-10, "Weedcoin is downloading blocks...");
 
         static CReserveKey reservekey(pwalletMain);
 
@@ -2552,7 +2552,7 @@ void ThreadRPCServer2(void* parg)
     {
         unsigned char rand_pwd[32];
         RAND_bytes(rand_pwd, 32);
-        string strWhatAmI = "To use weedcoind";
+        string strWhatAmI = "To use Weedcoind";
         if (mapArgs.count("-server"))
             strWhatAmI = strprintf(_("To use the %s option"), "\"-server\"");
         else if (mapArgs.count("-daemon"))
@@ -2560,7 +2560,7 @@ void ThreadRPCServer2(void* parg)
         ::error(
             _("%s, you must set a rpcpassword in the configuration file:\n %s\n"
               "It is recommended you use the following random password:\n"
-              "rpcuser=bitcoinrpc\n"
+              "rpcuser=weedcoinrpc\n"
               "rpcpassword=%s\n"
               "(you do not need to remember this password)\n"
               "If the file does not exist, create it with owner-readable-only file permissions.\n"),
