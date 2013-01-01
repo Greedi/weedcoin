@@ -2757,7 +2757,7 @@ Object CallRPC(const string& strMethod, const Array& params)
     SSLIOStreamDevice d(sslStream, fUseSSL);
     iostreams::stream<SSLIOStreamDevice> stream(d);
     if (!d.connect(GetArg("-rpcconnect", "127.0.0.1"), GetArg("-rpcport", "7332")))
-        throw runtime_error("couldn't connect to server");
+        throw runtime_error("Couldn't connect to server");
 #else
     if (fUseSSL)
         throw runtime_error("-rpcssl=1, but weedcoin compiled without full openssl libraries.");
@@ -2792,10 +2792,10 @@ Object CallRPC(const string& strMethod, const Array& params)
     // Parse reply
     Value valReply;
     if (!read_string(strReply, valReply))
-        throw runtime_error("couldn't parse reply from server");
+        throw runtime_error("Couldn't parse reply from server");
     const Object& reply = valReply.get_obj();
     if (reply.empty())
-        throw runtime_error("expected reply to have result, error and id properties");
+        throw runtime_error("Expected reply to have result, error and id properties");
 
     return reply;
 }
@@ -2811,7 +2811,7 @@ void ConvertTo(Value& value)
         // reinterpret string as unquoted json value
         Value value2;
         if (!read_string(value.get_str(), value2))
-            throw runtime_error("type mismatch");
+            throw runtime_error("Type mismatch");
         value = value2.get_value<T>();
     }
     else
@@ -2835,7 +2835,7 @@ int CommandLineRPC(int argc, char *argv[])
 
         // Method
         if (argc < 2)
-            throw runtime_error("too few parameters");
+            throw runtime_error("Too few parameters");
         string strMethod = argv[1];
 
         // Parameters default to strings
@@ -2875,7 +2875,7 @@ int CommandLineRPC(int argc, char *argv[])
             string s = params[1].get_str();
             Value v;
             if (!read_string(s, v) || v.type() != obj_type)
-                throw runtime_error("type mismatch");
+                throw runtime_error("Type mismatch");
             params[1] = v.get_obj();
         }
         if (strMethod == "sendmany"                && n > 2) ConvertTo<boost::int64_t>(params[2]);
@@ -2885,7 +2885,7 @@ int CommandLineRPC(int argc, char *argv[])
             string s = params[1].get_str();
             Value v;
             if (!read_string(s, v) || v.type() != array_type)
-                throw runtime_error("type mismatch "+s);
+                throw runtime_error("Type mismatch "+s);
             params[1] = v.get_array();
         }
 
@@ -2893,13 +2893,13 @@ int CommandLineRPC(int argc, char *argv[])
         Object reply = CallRPC(strMethod, params);
 
         // Parse reply
-        const Value& result = find_value(reply, "result");
-        const Value& error  = find_value(reply, "error");
+        const Value& result = find_value(reply, "Result");
+        const Value& error  = find_value(reply, "Error");
 
         if (error.type() != null_type)
         {
             // Error
-            strPrint = "error: " + write_string(error, false);
+            strPrint = "Error: " + write_string(error, false);
             int code = find_value(error.get_obj(), "code").get_int();
             nRet = abs(code);
         }
@@ -2950,7 +2950,7 @@ int main(int argc, char *argv[])
     {
         if (argc >= 2 && string(argv[1]) == "-server")
         {
-            printf("server ready\n");
+            printf("Server ready\n");
             ThreadRPCServer(NULL);
         }
         else
