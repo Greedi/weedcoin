@@ -2602,7 +2602,7 @@ void ThreadRPCServer2(void* parg)
     }
 #else
     if (fUseSSL)
-        throw runtime_error("-rpcssl=1, but weedcoin compiled without full openssl libraries.");
+        throw runtime_error("-rpcssl=1, but Weedcoin compiled without full openssl libraries.");
 #endif
 
     loop
@@ -2696,7 +2696,7 @@ void ThreadRPCServer2(void* parg)
             else if (valParams.type() == null_type)
                 params = Array();
             else
-                throw JSONRPCError(-32600, "Params must be an array");
+                throw JSONRPCError(-32600, "Params must be an array!");
 
             // Find method
             map<string, rpcfn_type>::iterator mi = mapCallTable.find(strMethod);
