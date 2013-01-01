@@ -1935,7 +1935,7 @@ bool LoadBlockIndex(bool fAllowNew)
         {
             block.nTime    = 1356988772;
             block.nBits    = 0x1e0ffff0;
-             block.nNonce   = 387131129;
+            block.nNonce   = 387131129;
         }
 
         //// debug print
